@@ -1,0 +1,334 @@
+/* Section: trigger for ScrollTrigger pin, full viewport height */
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg-gradient);
+  box-sizing: border-box;
+}
+
+/* GSAP horizontal strip: 4 panels = 400% width, flex row (scroll-driven by ScrollTrigger) */
+.container {
+  width: 400%;
+  height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* Each panel = one viewport width (25% of 400% container) */
+.panel {
+  position: relative;
+  flex: 0 0 25%;
+  width: 25%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem 5rem;
+  box-sizing: border-box;
+}
+
+/* Slight tint per section (for testing) */
+.panel1 { background: linear-gradient(135deg, rgba(255,77,0,0.04) 0%, transparent 50%); }
+.panel2 { background: linear-gradient(135deg, rgba(97,255,201,0.04) 0%, transparent 50%); }
+.panel3 { background: linear-gradient(135deg, rgba(180,160,220,0.04) 0%, transparent 50%); }
+.panel4 { background: linear-gradient(135deg, rgba(255,200,100,0.04) 0%, transparent 50%); }
+
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 65% 55% at 50% 50%,
+    #000 65%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 65% 55% at 50% 50%,
+    #000 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Shared typography */
+.panelTitle {
+  margin: 0 0 0.75rem;
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 7vw, 3.75rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.tagline {
+  margin: 0 0 2rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  max-width: 28rem;
+}
+
+.subtitle {
+  margin: 0 0 2rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 32rem;
+}
+
+.bodyText {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.bodyText:last-child {
+  margin-bottom: 0;
+}
+
+/* ——— 1. Agency layout: title, tagline, two-column copy ——— */
+.agencyLayout {
+  max-width: 52rem;
+  text-align: center;
+}
+
+.agencyLayout .panelTitle {
+  margin-bottom: 0.5rem;
+}
+
+.agencyLayout .tagline {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem 3rem;
+  text-align: left;
+  margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ——— 2. Projects layout: title, subtitle, project cards ——— */
+.projectsLayout {
+  max-width: 64rem;
+  text-align: center;
+}
+
+.projectsLayout .panelTitle {
+  margin-bottom: 0.5rem;
+}
+
+.projectsLayout .subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.projectGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.projectCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius--medium, 1.25rem);
+  padding: 1.5rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.projectCard:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.projectCardImage {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--border-radius--xsmall, 0.75rem);
+  margin-bottom: 1rem;
+}
+
+.projectCardTitle {
+  margin: 0 0 0.5rem;
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.projectCardDesc {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ——— 3. Team layout: title, subtitle, team grid ——— */
+.teamLayout {
+  max-width: 56rem;
+  text-align: center;
+}
+
+.teamLayout .panelTitle {
+  margin-bottom: 0.5rem;
+}
+
+.teamLayout .subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.teamGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.teamCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.teamCardAvatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.teamCardName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.teamCardRole {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ——— 4. Owner layout: image left, bio right ——— */
+.ownerLayout {
+  max-width: 56rem;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 3rem;
+  align-items: center;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .ownerLayout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  .ownerImageWrap {
+    order: -1;
+  }
+}
+
+.ownerImageWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ownerImage {
+  width: 100%;
+  max-width: 18rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 3px solid rgba(255, 255, 255, 0.12);
+}
+
+.ownerBio .panelTitle {
+  margin-bottom: 1rem;
+}
+
+.ownerName {
+  margin: 0 0 0.25rem;
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.ownerTitle {
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ownerBio .bodyText {
+  margin-bottom: 1rem;
+}
+

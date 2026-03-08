@@ -1,0 +1,243 @@
+/* Wrapper: tall so scrolling pushes each sticky panel past the viewport */
+.wrapper {
+  position: relative;
+  background: var(--bg-gradient);
+}
+
+/* Each panel is full viewport height and sticks to top when scrolled to */
+.panel {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: stretch;
+  justify-items: center;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  background: var(--bg-gradient);
+  isolation: isolate;
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.panelContent[data-wide] {
+  max-width: 1200px;
+  justify-content: stretch;
+}
+
+/* Grid overlay (subtle grid + radial fade, matches site palette) */
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(
+    ellipse 65% 55% at 50% 0%,
+    #000 65%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 65% 55% at 50% 0%,
+    #000 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Section title — same brutal bold font as service titles, ultra bold and big */
+.heading {
+  margin: 0;
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.75rem, 10vw, 5rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* ——— First service: hero layout (text left, image right) ——— */
+.serviceHero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0;
+  padding: 2rem 0;
+}
+
+.panelContent[data-wide] .serviceHero {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .serviceHero {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  .serviceHeroImage {
+    order: -1;
+    min-height: 280px;
+  }
+  .serviceHeroImage img {
+    height: auto;
+  }
+}
+
+.serviceHeroText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Brutal bold title — heavy display font */
+.serviceHeroTitle {
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem;
+}
+
+.serviceHeroList {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  list-style: disc;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.serviceHeroList li {
+  margin-bottom: 0.75rem;
+}
+
+.serviceHeroList li:last-child {
+  margin-bottom: 0;
+}
+
+.serviceHeroImage {
+  position: relative;
+  border-radius: var(--border-radius--medium, 1.25rem);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  min-height: 0;
+}
+
+.serviceHeroImage img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ——— Service cards (redesigned) ——— */
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.75rem;
+  padding: 2.25rem 2.5rem;
+  border-radius: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.card.lavender {
+  border-color: rgba(180, 160, 220, 0.35);
+  background: rgba(180, 160, 220, 0.12);
+}
+
+.card.lavender:hover {
+  border-color: rgba(180, 160, 220, 0.5);
+  background: rgba(180, 160, 220, 0.18);
+}
+
+.card.teal {
+  border-color: rgba(120, 190, 200, 0.35);
+  background: rgba(120, 190, 200, 0.12);
+}
+
+.card.teal:hover {
+  border-color: rgba(120, 190, 200, 0.5);
+  background: rgba(120, 190, 200, 0.18);
+}
+
+.card.slate {
+  border-color: rgba(140, 145, 165, 0.35);
+  background: rgba(140, 145, 165, 0.14);
+}
+
+.card.slate:hover {
+  border-color: rgba(140, 145, 165, 0.5);
+  background: rgba(140, 145, 165, 0.22);
+}
+
+.cardIcon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  padding: 12px;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  opacity: 0.95;
+}
+
+.cardIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cardContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.cardDescription {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
