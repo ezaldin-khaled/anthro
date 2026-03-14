@@ -1,8 +1,11 @@
 import { useRef, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
 import styles from './AboutUs.module.css'
+import { teamMembers, teamImages, teamSubtitle } from '../data/team'
+import wesamImg from '../../Assets/wesam.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,18 +26,8 @@ const projectsContent = {
   ],
 }
 
-const teamContent = {
-  subtitle: 'The people behind the work.',
-  members: [
-    { name: 'Member One', role: 'Role / Title' },
-    { name: 'Member Two', role: 'Role / Title' },
-    { name: 'Member Three', role: 'Role / Title' },
-    { name: 'Member Four', role: 'Role / Title' },
-  ],
-}
-
 const ownerContent = {
-  name: 'Owner Name',
+  name: 'Wesam',
   title: 'Founder & Lead',
   bio1:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras consequat. Praesent dapibus, neque id cursus faucibus.',
@@ -46,6 +39,7 @@ export function AboutUs() {
   const sectionRef = useRef<HTMLElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
+  const navigate = useNavigate()
 
   // Sync ScrollTrigger with Lenis: proxy window scroll to Lenis and update on scroll
   useEffect(() => {
@@ -175,13 +169,24 @@ export function AboutUs() {
             <h2 id="team-heading" className={styles.panelTitle}>
               The Team
             </h2>
-            <p className={styles.subtitle}>{teamContent.subtitle}</p>
+            <p className={styles.subtitle}>{teamSubtitle}</p>
             <ul className={styles.teamGrid}>
-              {teamContent.members.map((member, i) => (
-                <li key={i} className={styles.teamCard}>
-                  <div className={styles.teamCardAvatar} aria-hidden />
-                  <span className={styles.teamCardName}>{member.name}</span>
-                  <span className={styles.teamCardRole}>{member.role}</span>
+              {teamMembers.map((member, i) => (
+                <li key={member.slug} className={styles.teamCard}>
+                  <Link
+                    to={`/team/${member.slug}`}
+                    className={styles.teamCardLink}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      navigate(`/team/${member.slug}`)
+                    }}
+                  >
+                    <div className={`${styles.teamCardAvatar} ${member.name === 'Tohama' ? styles.teamCardAvatarTohama : ''}`}>
+                      <img src={teamImages[i]} alt="" className={styles.teamCardAvatarImg} />
+                    </div>
+                    <span className={styles.teamCardName}>{member.name}</span>
+                    <span className={styles.teamCardRole}>{member.role}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -198,7 +203,9 @@ export function AboutUs() {
           <div className={styles.gridOverlay} aria-hidden />
           <div className={`${styles.panelContent} ${styles.ownerLayout}`}>
             <div className={styles.ownerImageWrap}>
-              <div className={styles.ownerImage} aria-hidden />
+              <div className={styles.ownerImage}>
+                <img src={wesamImg} alt="" className={styles.ownerImageImg} />
+              </div>
             </div>
             <div className={styles.ownerBio}>
               <h2 id="owner-heading" className={styles.panelTitle}>

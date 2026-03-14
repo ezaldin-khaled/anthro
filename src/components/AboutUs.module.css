@@ -224,7 +224,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 2rem 1.5rem;
 }
 
@@ -255,6 +255,18 @@
   border: 2px solid rgba(255, 255, 255, 0.12);
   margin-bottom: 1rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.teamCardAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tohama: shift image down in frame to show more of face (forehead) */
+.teamCardAvatarTohama .teamCardAvatarImg {
+  object-position: center 38%;
 }
 
 .teamCardName {
@@ -268,6 +280,28 @@
   font-size: 0.875rem;
   color: var(--text-muted);
   letter-spacing: 0.02em;
+}
+
+.teamCardLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.teamCardLink:hover {
+  opacity: 0.9;
+}
+
+.teamCardLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--border-radius--small);
 }
 
 /* ——— 4. Owner layout: image left, bio right ——— */
@@ -304,6 +338,13 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
   border: 3px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.ownerImageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .ownerBio .panelTitle {

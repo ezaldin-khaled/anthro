@@ -14,6 +14,7 @@ import { AdminLayout } from './components/AdminLayout.tsx'
 import { AdminDashboard } from './components/AdminDashboard.tsx'
 import { AdminMessages } from './components/AdminMessages.tsx'
 import { AdminMedia } from './components/AdminMedia.tsx'
+import { TeamMemberPage } from './components/TeamMemberPage.tsx'
 
 function ProtectedAdmin({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -40,6 +41,7 @@ function App() {
             </MouseProvider>
           }
         />
+        <Route path="/team/:slug" element={<TeamMemberPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
