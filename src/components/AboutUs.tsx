@@ -39,7 +39,7 @@ export function AboutUs() {
   const sectionRef = useRef<HTMLElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
-  const navigate = useNavigate()
+  const _navigate = useNavigate() // required for router; Link handles team navigation
 
   // Sync ScrollTrigger with Lenis: proxy window scroll to Lenis and update on scroll
   useEffect(() => {
@@ -63,6 +63,7 @@ export function AboutUs() {
     return () => {
       lenis.off('scroll', ScrollTrigger.update)
       ScrollTrigger.scrollerProxy(window, {}) // clear proxy
+      setTimeout(() => ScrollTrigger.refresh(), 0)
     }
   }, [lenis])
 
@@ -87,6 +88,7 @@ export function AboutUs() {
           scrub: 1,
           snap: 1 / (n - 1),
           end: '+=3500',
+          invalidateOnRefresh: true,
         },
       })
     }, section)
@@ -100,6 +102,11 @@ export function AboutUs() {
       clearTimeout(refreshId)
       window.removeEventListener('resize', onResize)
       ctx.revert()
+      // Defer refresh so React can unmount DOM first (avoids removeChild errors from pin-spacer)
+      setTimeout(() => {
+        ScrollTrigger.clearScrollMemory()
+        ScrollTrigger.refresh()
+      }, 0)
     }
   }, [lenis])
 
@@ -176,10 +183,6 @@ export function AboutUs() {
                   <Link
                     to={`/team/${member.slug}`}
                     className={styles.teamCardLink}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      navigate(`/team/${member.slug}`)
-                    }}
                   >
                     <div className={`${styles.teamCardAvatar} ${member.name === 'Tohama' ? styles.teamCardAvatarTohama : ''}`}>
                       <img src={teamImages[i]} alt="" className={styles.teamCardAvatarImg} />

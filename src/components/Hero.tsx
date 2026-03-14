@@ -74,17 +74,30 @@ export function Hero() {
         >
           ELEVATE. INNOVATE. ASPIRE.
         </motion.p>
-        <motion.a
-          href="#services"
-          className="mt-8 inline-block rounded-md border-2 border-[var(--accent)] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text-primary)] transition-all duration-200 hover:bg-[var(--accent)] hover:text-[var(--bg-deep)] hover:shadow-[0_0_32px_var(--accent-glow)]"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          Start Your Journey
-        </motion.a>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <motion.a
+            href="#contact"
+            className="inline-block rounded-md border-2 border-[var(--accent)] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text-primary)] transition-all duration-200 hover:bg-[var(--accent)] hover:text-[var(--bg-deep)] hover:shadow-[0_0_32px_var(--accent-glow)]"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Contact us
+          </motion.a>
+          <motion.a
+            href="#contact"
+            className="inline-block rounded-md bg-[var(--accent)] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.08em] text-[var(--bg-deep)] transition-all duration-200 hover:shadow-[0_0_32px_var(--accent-glow)]"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Direct connection
+          </motion.a>
+        </div>
       </div>
 
       {/* Section nav arrows */}

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import styles from './Header.module.css'
 
 const navLinks = [
   { label: 'WORK', href: '#work' },
@@ -27,14 +27,12 @@ export function Header() {
         <ul className="flex list-none items-center gap-6 md:gap-8">
           {navLinks.map(({ label, href }) => (
             <li key={href}>
-              <motion.a
+              <a
                 href={href}
-                className="text-[0.9375rem] font-medium tracking-[0.045em] text-[var(--text-secondary)] transition-opacity hover:opacity-100"
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
+                className={styles.navLinkInteractive}
               >
                 {label}
-              </motion.a>
+              </a>
             </li>
           ))}
         </ul>

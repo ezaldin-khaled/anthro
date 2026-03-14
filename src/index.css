@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Smooth page appearance on route change */
+.page-enter {
+  animation: pageFadeIn 0.25s ease-out;
+}
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Site-wide background (landing palette applied everywhere) */
 :root {
   --bg-deep: #1a1a1a;

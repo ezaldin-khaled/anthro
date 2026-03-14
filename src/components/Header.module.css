@@ -61,3 +61,41 @@
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 4px;
 }
+
+/* Nav link: orange glow + slow underline on hover/focus */
+.navLinkInteractive {
+  position: relative;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.045em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navLinkInteractive::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+
+.navLinkInteractive:hover,
+.navLinkInteractive:focus-visible {
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(255, 77, 0, 0.2);
+}
+
+.navLinkInteractive:hover::after,
+.navLinkInteractive:focus-visible::after {
+  width: 100%;
+}
+
+.navLinkInteractive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}

@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { MouseProvider } from './contexts/MouseContext'
+import { ScrollRestore } from './components/ScrollRestore'
+import { PageTransition } from './components/PageTransition'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { HeroLogos } from './components/HeroLogos'
@@ -25,24 +27,43 @@ function ProtectedAdmin({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <AuthProvider>
+      <ScrollRestore />
       <Routes>
         <Route
           path="/"
           element={
-            <MouseProvider>
-              <Header />
-              <Hero />
-              <HeroLogos />
-              <Services />
-              <AboutUs />
-              <OurWork />
-              <ContactUs />
-              <Footer />
-            </MouseProvider>
+            <PageTransition>
+              <MouseProvider>
+                <Header />
+                <Hero />
+                <HeroLogos />
+                <Services />
+                <AboutUs />
+                <OurWork />
+                <ContactUs />
+                <Footer />
+              </MouseProvider>
+            </PageTransition>
           }
         />
-        <Route path="/team/:slug" element={<TeamMemberPage />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/team/:slug"
+          element={
+            <PageTransition>
+              <Header />
+              <TeamMemberPage />
+              <Footer />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/admin/login"
+          element={
+            <PageTransition>
+              <AdminLogin />
+            </PageTransition>
+          }
+        />
         <Route
           path="/admin"
           element={
