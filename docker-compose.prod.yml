@@ -1,5 +1,6 @@
 # Production on Droplet: Caddy handles SSL (HTTPS) and proxies to the frontend.
-# Run: docker compose -f docker-compose.prod.yml up -d
+# Dedicated droplet (only anthro):  docker compose -f docker-compose.prod.yml up -d
+# Shared droplet (80/443 in use):  ./start-shared.sh   OR   docker compose -f docker-compose.prod.yml -f docker-compose.prod.shared.yml up -d
 
 services:
   caddy:
