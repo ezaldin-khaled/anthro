@@ -4,40 +4,37 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
 import styles from './OurWork.module.css'
 
+import ganImg from '../../Assets/gan.png'
+import chocolocoImg from '../../Assets/chocoloco.png'
+import clickExpriceImg from '../../Assets/click-exprice.png'
+
 gsap.registerPlugin(ScrollTrigger)
 
 const workContent = {
   tag: 'Latest work',
   title: 'Our Work',
-  subtitle: 'A selection of our latest clients and the work we’ve done together.',
+  subtitle: 'A selection of our main projects.',
   items: [
     {
-      client: 'Client One',
-      category: 'Brand & Identity',
-      title: 'Full rebrand and visual identity',
-      description: 'Strategy, naming, and visual system for a leading tech startup.',
-      image: null,
+      client: 'GANTClub',
+      category: 'Platform',
+      title: 'Gan',
+      description: 'Where your talent meets real opportunities. Professional portfolio, visibility, and talent matching.',
+      image: ganImg,
     },
     {
-      client: 'Client Two',
-      category: 'Digital Products',
-      title: 'Product strategy and UI/UX',
-      description: 'End-to-end product design for a next-gen consumer app.',
-      image: null,
+      client: 'Premium Chocolates',
+      category: 'E‑commerce',
+      title: 'Chocoloco',
+      description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.',
+      image: chocolocoImg,
     },
     {
-      client: 'Client Three',
-      category: 'Campaigns & Content',
-      title: 'Integrated campaign and content',
-      description: 'Multi-channel campaign and content strategy.',
-      image: null,
-    },
-    {
-      client: 'Client Four',
+      client: 'Logistics',
       category: 'Web & Development',
-      title: 'Design and development',
-      description: 'High-performance web platform and design system.',
-      image: null,
+      title: 'Click Exprice',
+      description: "Let's move your business forward. Services, fleet, and shipping solutions.",
+      image: clickExpriceImg,
     },
   ],
 }
@@ -218,7 +215,11 @@ export function OurWork() {
           {workContent.items.map((item, i) => (
             <li key={i} className={styles.card}>
               <div className={styles.cardImageWrap}>
-                <div className={styles.cardImage} aria-hidden />
+                {item.image ? (
+                  <img src={item.image} alt="" className={styles.cardImage} aria-hidden />
+                ) : (
+                  <div className={styles.cardImage} aria-hidden />
+                )}
               </div>
               <div className={styles.cardBody}>
                 <span className={styles.cardCategory}>{item.category}</span>
