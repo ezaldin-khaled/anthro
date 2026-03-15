@@ -1,12 +1,8 @@
-# Primary: your domain with automatic HTTPS (Let's Encrypt).
-# Port 80 must be open when Caddy starts so it can get the certificate.
+# Single block: avoids 400 from catch-all or Host header issues.
+# Forward Host without port so upstream (nginx) doesn't reject the request.
 anthrotech.ae, www.anthrotech.ae {
-  reverse_proxy frontend:80
-}
-
-# Fallback: avoid 400 when Host header doesn't match (e.g. IP or other).
-# Uses Caddy's internal cert so browser will show "Not secure" only for this fallback.
-:443 {
-  tls internal
-  reverse_proxy frontend:80
+  reverse_proxy frontend:80 {
+    header_up Host {host}
+    header_up X-Forwarded-Proto https
+  }
 }
