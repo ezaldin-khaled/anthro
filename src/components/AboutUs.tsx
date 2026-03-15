@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
@@ -39,7 +39,6 @@ export function AboutUs() {
   const sectionRef = useRef<HTMLElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
-  const _navigate = useNavigate() // required for router; Link handles team navigation
 
   // Sync ScrollTrigger with Lenis: proxy window scroll to Lenis and update on scroll
   useEffect(() => {
