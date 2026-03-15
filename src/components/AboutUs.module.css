@@ -182,7 +182,7 @@
 .projectCardImage {
   width: 100%;
   aspect-ratio: 16 / 10;
-  object-fit: cover;
+  object-fit: contain;
   background: rgba(255, 255, 255, 0.06);
   border-radius: var(--border-radius--xsmall, 0.75rem);
   margin-bottom: 1rem;
