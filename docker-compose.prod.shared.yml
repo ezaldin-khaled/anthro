@@ -1,0 +1,9 @@
+# Use this when port 80/443 are already used by other containers on the same host.
+# Run: docker compose -f docker-compose.prod.yml -f docker-compose.prod.shared.yml up -d
+# Then point your main reverse proxy (on 80/443) at anthrotech.ae → http://localhost:8080 or https://localhost:8443
+
+services:
+  caddy:
+    ports:
+      - "8080:80"
+      - "8443:443"
