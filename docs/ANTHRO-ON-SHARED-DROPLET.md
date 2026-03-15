@@ -8,8 +8,9 @@ When other containers (or nginx/Traefik) use port 80 and 443, run the anthro sta
 
 ```bash
 cd ~/anthro
-docker compose -f docker-compose.prod.yml -f docker-compose.prod.shared.yml up -d --build
-docker compose -f docker-compose.prod.yml -f docker-compose.prod.shared.yml ps
+./start-shared.sh
+# or: ANTHRO_HTTP_PORT=8080 ANTHRO_HTTPS_PORT=8443 docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml ps
 ```
 
 Caddy will listen on:
