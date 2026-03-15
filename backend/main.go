@@ -22,6 +22,7 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(requestLogMiddleware())
 	r.Use(corsMiddleware())
 	r.GET("/api/health", func(c *gin.Context) { c.JSON(200, gin.H{"ok": true}) })
 	r.POST("/api/contact", handleContact)
@@ -34,6 +35,25 @@ func main() {
 	}
 }
 
+// #region agent log
+func requestLogMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method, path, host := c.Request.Method, c.Request.URL.Path, c.Request.Host
+		c.Next()
+		status := c.Writer.Status()
+		line := fmt.Sprintf(`{"hypothesisId":"backend","message":"request","data":{"method":"%s","path":"%s","host":"%s","status":%d},"timestamp":%d}`+"\n",
+			method, path, host, status, time.Now().UnixMilli())
+		if p := os.Getenv("DEBUG_LOG_PATH"); p != "" {
+			if f, err := os.OpenFile(p, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644); err == nil {
+				f.WriteString(line)
+				f.Close()
+			}
+		}
+		fmt.Print(line)
+	}
+}
+
+// #endregion
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
