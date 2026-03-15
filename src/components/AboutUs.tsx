@@ -6,6 +6,9 @@ import { useLenis } from 'lenis/react'
 import styles from './AboutUs.module.css'
 import { teamMembers, teamImages, teamSubtitle } from '../data/team'
 import wesamImg from '../../Assets/wesam.png'
+import ganImg from '../../Assets/gan.png'
+import chocolocoImg from '../../Assets/chocoloco.png'
+import clickExpriceImg from '../../Assets/click-exprice.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -20,9 +23,9 @@ const agencyContent = {
 const projectsContent = {
   subtitle: 'A selection of our recent work across branding, digital products, and campaigns.',
   items: [
-    { title: 'Brand & Identity', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.' },
-    { title: 'Digital Products', description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.' },
-    { title: 'Campaigns & Content', description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.' },
+    { title: 'Gan', description: 'Where your talent meets real opportunities. Professional portfolio, visibility, and talent matching.', image: ganImg },
+    { title: 'Chocoloco', description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.', image: chocolocoImg },
+    { title: 'Click Exprice', description: "Let's move your business forward. Services, fleet, and shipping solutions.", image: clickExpriceImg },
   ],
 }
 
@@ -154,7 +157,11 @@ export function AboutUs() {
             <ul className={styles.projectGrid}>
               {projectsContent.items.map((item, i) => (
                 <li key={i} className={styles.projectCard}>
-                  <div className={styles.projectCardImage} aria-hidden />
+                  {item.image ? (
+                    <img src={item.image} alt="" className={styles.projectCardImage} aria-hidden />
+                  ) : (
+                    <div className={styles.projectCardImage} aria-hidden />
+                  )}
                   <h3 className={styles.projectCardTitle}>{item.title}</h3>
                   <p className={styles.projectCardDesc}>{item.description}</p>
                 </li>
