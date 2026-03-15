@@ -1,6 +1,8 @@
-# Single block: avoids 400 from catch-all or Host header issues.
-# Forward Host without port so upstream (nginx) doesn't reject the request.
+# When behind a main proxy (shared droplet): main proxy does SSL; Caddy must NOT try ACME
+# or Let's Encrypt will get 403 from the main proxy for /.well-known/acme-challenge/.
+# tls off = serve HTTP only so the main proxy can forward http://127.0.0.1:9080.
 anthrotech.ae, www.anthrotech.ae {
+  tls off
   reverse_proxy frontend:80 {
     header_up Host {host}
     header_up X-Forwarded-Proto https

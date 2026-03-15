@@ -23,18 +23,15 @@ ANTHRO_HTTP_PORT=18080 ANTHRO_HTTPS_PORT=18443 ./start-shared.sh
 
 ---
 
-## 2. Route anthrotech.ae from your main proxy
+## 2. Route anthrotech.ae from your main proxy (required)
 
-Your existing service that listens on **80** and **443** must send **anthrotech.ae** and **www.anthrotech.ae** to the anthro stack.
+Your existing service on **80** and **443** must send **anthrotech.ae** and **www.anthrotech.ae** to **http://127.0.0.1:9080**. The anthro Caddyfile is set to **tls off** so it does not try to get a certificate (your main proxy was returning **403** for `/.well-known/acme-challenge/`, so ACME could not succeed). The main proxy must do SSL (e.g. certbot) and forward HTTP to 9080.
 
-### Option A – Main proxy does SSL and forwards HTTP
-
-In your main reverse proxy (nginx, Traefik, Caddy, etc.) add a server/vhost:
+### Option A – Main proxy does SSL and forwards HTTP (recommended)
 
 - **Server names:** `anthrotech.ae` and `www.anthrotech.ae`
-- **Backend:** `http://127.0.0.1:9080` (or `http://host.docker.internal:9080` if the proxy runs in Docker and anthro is on the host)
-
-Your main proxy terminates HTTPS and forwards plain HTTP to port 8080.
+- **Backend:** `http://127.0.0.1:9080`
+- **SSL:** Obtain the certificate on the main proxy (e.g. certbot for nginx, or your proxy’s ACME).
 
 ### Option B – Main proxy forwards HTTPS (TLS passthrough)
 
@@ -45,18 +42,25 @@ If your main proxy supports TLS passthrough:
 
 ### Option C – Main proxy is nginx
 
-Example nginx server block (on the host or in the container that has 80/443):
+Example: get a cert with certbot, then proxy to anthro on 9080.
 
 ```nginx
 server {
     listen 80;
     server_name anthrotech.ae www.anthrotech.ae;
-    return 301 https://$host$request_uri;
+    # Let certbot do HTTP-01 for this server (certbot will add a location)
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;  # or your certbot webroot
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
 server {
     listen 443 ssl;
     server_name anthrotech.ae www.anthrotech.ae;
-    # Your SSL cert here, or use certbot
+    ssl_certificate     /etc/letsencrypt/live/anthrotech.ae/fullchain.pem;
+    ssl_certificate_key  /etc/letsencrypt/live/anthrotech.ae/privkey.pem;
     location / {
         proxy_pass http://127.0.0.1:9080;
         proxy_set_header Host $host;
@@ -67,7 +71,7 @@ server {
 }
 ```
 
-Then reload nginx. Anthro Caddy will receive HTTP on 8080; nginx handles HTTPS on 443.
+Then reload nginx. Anthro Caddy (with `tls off`) receives HTTP on 9080; nginx handles HTTPS on 443.
 
 ---
 
