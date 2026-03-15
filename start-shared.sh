@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Use this when port 80/443 are used by other containers. Anthro will listen on 8080 and 8443.
+# Use when port 80/443 are taken. Anthro listens on 9080 and 9443 (override with ANTHRO_HTTP_PORT/ANTHRO_HTTPS_PORT).
 set -e
 cd "$(dirname "$0")"
-export ANTHRO_HTTP_PORT=8080
-export ANTHRO_HTTPS_PORT=8443
+export ANTHRO_HTTP_PORT="${ANTHRO_HTTP_PORT:-9080}"
+export ANTHRO_HTTPS_PORT="${ANTHRO_HTTPS_PORT:-9443}"
 docker compose -f docker-compose.prod.yml up -d "$@"
