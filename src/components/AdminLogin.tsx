@@ -9,19 +9,24 @@ export function AdminLogin() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setErrorMessage('')
     setStatus('submitting')
     const form = e.currentTarget
     const email = (form.elements.namedItem('email') as HTMLInputElement).value
     const password = (form.elements.namedItem('password') as HTMLInputElement).value
-    const ok = login(email, password)
-    if (ok) {
-      navigate('/admin')
-    } else {
+    try {
+      const ok = await login(email, password)
+      if (ok) {
+        navigate('/admin')
+      } else {
+        setStatus('error')
+        setErrorMessage('Invalid email or password.')
+      }
+    } catch {
       setStatus('error')
-      setErrorMessage('Invalid email or password.')
+      setErrorMessage('Something went wrong. Please try again.')
     }
   }
 

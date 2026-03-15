@@ -1,0 +1,4 @@
+# Replace anthrotech.ae with your domain. Caddy gets HTTPS certs automatically.
+anthrotech.ae, www.anthrotech.ae {
+  reverse_proxy frontend:80
+}

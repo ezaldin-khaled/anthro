@@ -13,11 +13,26 @@ export function ContactUs() {
   const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const form = e.currentTarget
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim()
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim()
+    if (!name || !email || !message) return
     setStatus('sending')
-    // Placeholder: in production you’d POST to an API or form service
-    setTimeout(() => setStatus('sent'), 800)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) setStatus('sent')
+      else setStatus('error')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (

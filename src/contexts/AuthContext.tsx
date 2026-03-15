@@ -1,49 +1,82 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 
-const AUTH_STORAGE_KEY = 'anthro_admin_auth'
-
-const MOCK_EMAIL = 'admin@anthro.com'
-const MOCK_PASSWORD = 'admin123'
+const TOKEN_STORAGE_KEY = 'anthro_admin_token'
+const API = '/api'
 
 type AuthContextValue = {
   isAuthenticated: boolean
-  login: (email: string, password: string) => boolean
+  isLoading: boolean
+  login: (email: string, password: string) => Promise<boolean>
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-function readStored(): boolean {
+function getStoredToken(): string | null {
   try {
-    return localStorage.getItem(AUTH_STORAGE_KEY) === 'true'
+    return localStorage.getItem(TOKEN_STORAGE_KEY)
   } catch {
-    return false
+    return null
   }
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(readStored)
+function setStoredToken(token: string | null) {
+  try {
+    if (token) localStorage.setItem(TOKEN_STORAGE_KEY, token)
+    else localStorage.removeItem(TOKEN_STORAGE_KEY)
+  } catch {}
+}
 
-  const login = useCallback((email: string, password: string) => {
-    const ok = email === MOCK_EMAIL && password === MOCK_PASSWORD
-    if (ok) {
-      setIsAuthenticated(true)
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEY, 'true')
-      } catch {}
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const validateToken = useCallback(async (token: string): Promise<boolean> => {
+    const res = await fetch(`${API}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return res.ok
+  }, [])
+
+  useEffect(() => {
+    const token = getStoredToken()
+    if (!token) {
+      setIsLoading(false)
+      return
     }
-    return ok
+    validateToken(token)
+      .then((ok) => {
+        setIsAuthenticated(ok)
+        if (!ok) setStoredToken(null)
+      })
+      .catch(() => {
+        setStoredToken(null)
+      })
+      .finally(() => setIsLoading(false))
+  }, [validateToken])
+
+  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data.ok || !data.token) {
+      return false
+    }
+    setStoredToken(data.token)
+    setIsAuthenticated(true)
+    return true
   }, [])
 
   const logout = useCallback(() => {
+    setStoredToken(null)
     setIsAuthenticated(false)
-    try {
-      localStorage.removeItem(AUTH_STORAGE_KEY)
-    } catch {}
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

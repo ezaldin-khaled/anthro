@@ -19,9 +19,17 @@ import { AdminMedia } from './components/AdminMedia.tsx'
 import { TeamMemberPage } from './components/TeamMemberPage.tsx'
 
 function ProtectedAdmin({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
+  if (isLoading) return null
   if (!isAuthenticated) return <Navigate to="/admin/login" replace />
   return <>{children}</>
+}
+
+function RedirectIfAdmin() {
+  const { isAuthenticated, isLoading } = useAuth()
+  if (isLoading) return null
+  if (isAuthenticated) return <Navigate to="/admin" replace />
+  return <AdminLogin />
 }
 
 function App() {
@@ -60,7 +68,7 @@ function App() {
           path="/admin/login"
           element={
             <PageTransition>
-              <AdminLogin />
+              <RedirectIfAdmin />
             </PageTransition>
           }
         />

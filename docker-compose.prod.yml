@@ -1,0 +1,50 @@
+# Production on Droplet: Caddy handles SSL (HTTPS) and proxies to the frontend.
+# Run: docker compose -f docker-compose.prod.yml up -d
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    networks:
+      - app
+    depends_on:
+      - frontend
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    expose:
+      - "80"
+    depends_on:
+      - backend
+    networks:
+      - app
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      - PORT=4000
+      - SMTP_HOST=${SMTP_HOST:-smtp.hostinger.com}
+      - SMTP_PORT=${SMTP_PORT:-465}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - CONTACT_TO=${CONTACT_TO:-${SMTP_USER}}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - app
+    restart: unless-stopped
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  caddy_data:
