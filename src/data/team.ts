@@ -3,7 +3,6 @@ import maisImg from '../../Assets/mais.png'
 import tohamaImg from '../../Assets/tohama.png'
 import yasminImg from '../../Assets/yasmin.png'
 import khaledImg from '../../Assets/khaled.jpeg'
-import mounesImg from '../../Assets/mounes.jpg'
 import moaansImg from '../../Assets/moaans.png'
 import rabeeImg from '../../Assets/rr.png'
 
@@ -13,8 +12,8 @@ export const teamImages = [
   tohamaImg,
   yasminImg,
   khaledImg,
-  mounesImg,
-  moaansImg,
+  moaansImg, // Mounes
+  moaansImg, // Moaans
   rabeeImg,
 ]
 
