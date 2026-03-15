@@ -33,12 +33,9 @@ Your existing service on **80** and **443** must send **anthrotech.ae** and **ww
 - **Backend:** `http://127.0.0.1:9080`
 - **SSL:** Obtain the certificate on the main proxy (e.g. certbot for nginx, or your proxy’s ACME).
 
-### Option B – Main proxy forwards HTTPS (TLS passthrough)
+### Option B – TLS passthrough to 9443 (not recommended)
 
-If your main proxy supports TLS passthrough:
-
-- For **anthrotech.ae** / **www.anthrotech.ae**, forward TCP 443 to **127.0.0.1:9443** (or the anthro Caddy container).
-- Caddy on 9443 will handle TLS and the site. Port 80 can redirect to 443 in the main proxy, then 443 → 9443.
+Caddy has `tls off` for anthrotech.ae, so it does not serve HTTPS on 9443 for this site. **Prefer Option A**: main proxy does SSL and forwards **http://127.0.0.1:9080**. If you use passthrough to 9443, Caddy would need TLS re-enabled and ACME would need to work (your main proxy was returning 403 for ACME).
 
 ### Option C – Main proxy is nginx
 
@@ -73,12 +70,21 @@ server {
 
 Then reload nginx. Anthro Caddy (with `tls off`) receives HTTP on 9080; nginx handles HTTPS on 443.
 
+**Ready-to-paste example:** see `docs/main-proxy-anthrotech.example.conf` in the repo.
+
 ---
 
-## 3. Check
+## 3. If you still get 400
+
+- **Forward to HTTP 9080 only.** If your main proxy uses `proxy_pass https://127.0.0.1:9443` or forwards to 9443, change it to `proxy_pass http://127.0.0.1:9080`.
+- In the browser, open DevTools → Network → click the request with status 400 → **Response Headers**. If you see **X-Anthro-Served: 1**, the response came from the anthro app (so the main proxy is forwarding correctly; the 400 is from our stack). If you do **not** see that header, the 400 is from the main proxy (wrong or missing server block for anthrotech.ae).
+
+---
+
+## 4. Check
 
 - Open **https://anthrotech.ae** (and **https://www.anthrotech.ae**).
-- They should hit your main proxy (80/443), which forwards to anthro on 8080 (or 8443).
+- They should hit your main proxy (80/443), which forwards to anthro on **9080** (HTTP only).
 
 ---
 
