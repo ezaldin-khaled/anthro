@@ -95,3 +95,6 @@ Then reload nginx. Anthro Caddy (with `tls off`) receives HTTP on 9080; nginx ha
 | Other containers  | 80, 443 | Your existing sites / proxy. |
 | Anthro (Caddy)    | 9080, 9443 | Anthro HTTP and HTTPS. |
 | Main proxy        | 80, 443 | Listens for anthrotech.ae and forwards to 127.0.0.1:9080 (or 9443). |
+
+For push-to-main CI/CD deployment from GitHub Actions, see:
+- `docs/HOSTINGER-KVM-AUTO-DEPLOY.md`

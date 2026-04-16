@@ -1,6 +1,9 @@
 # Deploy Anthro on a DigitalOcean Droplet (step by step)
 
-Use this guide to run the site on a Droplet with Docker and HTTPS (Caddy + Let's Encrypt).
+Use this guide to run the site on a dedicated Droplet with Docker and HTTPS (Caddy + Let's Encrypt).
+
+If your host already runs multiple projects behind nginx on `80/443`, use the shared-host auto-deploy guide instead:
+- `docs/HOSTINGER-KVM-AUTO-DEPLOY.md`
 
 ---
 
