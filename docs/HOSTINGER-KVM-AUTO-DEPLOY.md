@@ -50,6 +50,13 @@ The script:
 - runs `./start-shared.sh --build`
 - prints `docker compose ps`
 
+Optional: install nginx vhost from repo template in one command:
+
+```bash
+cd ~/anthro
+sudo REPO_DIR="$PWD" ./scripts/install-nginx-anthro.sh
+```
+
 ---
 
 ## 3) Configure GitHub Actions secrets
