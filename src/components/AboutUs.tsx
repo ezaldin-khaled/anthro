@@ -143,27 +143,32 @@ export function AboutUs() {
 
         {/* 2. Our Projects */}
         <article
-          className={`${styles.panel} ${styles.panel2}`}
+          className={`${styles.panel} ${styles.panel2} ${styles.projectsPanel}`}
           id="projects"
           aria-labelledby="projects-heading"
           data-section="2"
         >
           <div className={styles.gridOverlay} aria-hidden />
+          <div className={styles.projectsCoolOverlay} aria-hidden />
           <div className={`${styles.panelContent} ${styles.projectsLayout}`}>
-            <h2 id="projects-heading" className={styles.panelTitle}>
+            <h2 id="projects-heading" className={`${styles.panelTitle} ${styles.projectsPanelTitle}`}>
               Our Projects
             </h2>
-            <p className={styles.subtitle}>{projectsContent.subtitle}</p>
+            <p className={`${styles.subtitle} ${styles.projectsSubtitle}`}>{projectsContent.subtitle}</p>
             <ul className={styles.projectGrid}>
               {projectsContent.items.map((item, i) => (
                 <li key={i} className={styles.projectCard}>
-                  {item.image ? (
-                    <img src={item.image} alt="" className={styles.projectCardImage} aria-hidden />
-                  ) : (
-                    <div className={styles.projectCardImage} aria-hidden />
-                  )}
-                  <h3 className={styles.projectCardTitle}>{item.title}</h3>
-                  <p className={styles.projectCardDesc}>{item.description}</p>
+                  <h3 className={styles.projectCardLabel}>{item.title}</h3>
+                  <div className={styles.projectCardBox}>
+                    <div className={styles.projectCardFrame}>
+                      {item.image ? (
+                        <img src={item.image} alt="" className={styles.projectCardImage} aria-hidden />
+                      ) : (
+                        <div className={styles.projectCardImagePlaceholder} aria-hidden />
+                      )}
+                    </div>
+                    <p className={styles.projectCardDesc}>{item.description}</p>
+                  </div>
                 </li>
               ))}
             </ul>

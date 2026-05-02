@@ -113,11 +113,22 @@
 .card {
   width: 100%;
   max-width: 55%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    165deg,
+    rgba(28, 28, 28, 0.95) 0%,
+    rgba(18, 18, 18, 0.98) 100%
+  );
+  border: 1px solid rgba(255, 77, 0, 0.22);
   border-radius: var(--border-radius--medium, 1.25rem);
   overflow: hidden;
-  transition: border-color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+  box-shadow:
+    0 0 0 1px rgba(255, 77, 0, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    transform 0.3s ease,
+    box-shadow 0.35s ease;
 }
 
 .card:nth-child(odd) {
@@ -140,36 +151,99 @@
 }
 
 .card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
+  border-color: rgba(255, 120, 40, 0.55);
+  background: linear-gradient(
+    165deg,
+    rgba(34, 34, 34, 0.98) 0%,
+    rgba(22, 22, 22, 1) 100%
+  );
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(255, 77, 0, 0.2),
+    0 0 28px rgba(255, 77, 0, 0.15),
+    0 20px 48px rgba(0, 0, 0, 0.55);
 }
 
 .cardImageWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  background: #0d0d0d;
+  /* No padding — image fills edge to edge */
 }
 
-.cardImage {
+/* Placeholder when no image asset */
+.cardImagePlaceholder {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  min-height: 12rem;
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.06) 0%,
-    rgba(255, 255, 255, 0.02) 100%
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 77, 0, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 100%
   );
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 77, 0, 0.12);
 }
 
-.card:hover .cardImage {
+.card:hover .cardImagePlaceholder {
   background: linear-gradient(
     145deg,
-    rgba(255, 77, 0, 0.08) 0%,
-    rgba(255, 255, 255, 0.04) 100%
+    rgba(255, 77, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.06) 100%
   );
+}
+
+.cardImageImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Zoomed in slightly — shorter “view distance” */
+  transform: scale(1.12);
+  transform-origin: center center;
+  transition: transform 0.5s ease, filter 0.35s ease;
+  filter: saturate(0.92) contrast(1.02);
+}
+
+.card:hover .cardImageImg {
+  transform: scale(1.16);
+  filter: saturate(1) contrast(1.05);
+}
+
+/* Cinematic orange glow at base of image */
+.cardImageGlow {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(255, 77, 0, 0.35) 0%,
+    rgba(255, 77, 0, 0.08) 45%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.cardImageGlow::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 12rem;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
+  box-shadow: 0 0 16px var(--accent-glow), 0 0 32px rgba(255, 77, 0, 0.2);
+  border-radius: 999px;
 }
 
 .cardBody {

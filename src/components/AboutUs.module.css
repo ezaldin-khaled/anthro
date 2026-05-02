@@ -135,14 +135,29 @@
   }
 }
 
-/* ——— 2. Projects layout: title, subtitle, project cards ——— */
-.projectsLayout {
-  max-width: 64rem;
-  text-align: center;
+/* ——— 2. Projects layout: showcase frames, connectors (scoped to projects slide) ——— */
+.projectsPanel {
+  position: relative;
 }
 
-.projectsLayout .panelTitle {
-  margin-bottom: 0.5rem;
+.projectsCoolOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    rgba(80, 120, 200, 0.06) 0%,
+    rgba(120, 80, 180, 0.05) 40%,
+    transparent 75%
+  );
+}
+
+.projectsLayout {
+  position: relative;
+  z-index: 1;
+  max-width: 68rem;
+  text-align: center;
 }
 
 .projectsLayout .subtitle {
@@ -150,13 +165,45 @@
   margin-right: auto;
 }
 
+.projectsSubtitle {
+  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  letter-spacing: 0.02em;
+  max-width: 36rem;
+  opacity: 0.92;
+}
+
+.projectsPanelTitle {
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e8eef8 35%,
+    #c8d4e8 55%,
+    #ffffff 85%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Fallback for browsers that clip poorly */
+  filter: drop-shadow(0 0 24px rgba(255, 255, 255, 0.08));
+}
+
+@supports not (background-clip: text) {
+  .projectsPanelTitle {
+    color: var(--text-primary);
+    background: none;
+    filter: none;
+  }
+}
+
 .projectGrid {
+  --project-gap: 1.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: var(--project-gap);
   text-align: left;
 }
 
@@ -167,43 +214,154 @@
 }
 
 .projectCard {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--border-radius--medium, 1.25rem);
-  padding: 1.5rem;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 
-.projectCard:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.projectCardImage {
+/* Bordered shell: mockups + description live inside (matches reference) */
+.projectCardBox {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: contain;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: var(--border-radius--xsmall, 0.75rem);
-  margin-bottom: 1rem;
-  display: block;
+  background: rgba(6, 6, 8, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 0.95rem;
+  padding: 1rem 1rem 1.15rem;
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.3s ease;
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.projectCardTitle {
-  margin: 0 0 0.5rem;
+.projectCard:hover .projectCardBox {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(10, 10, 14, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 50, 0.14),
+    0 10px 44px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(255, 90, 20, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Multi-line glowing orange connectors between columns (desktop) */
+@media (min-width: 901px) {
+  .projectCard:not(:last-child) .projectCardBox::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--project-gap);
+    height: 22px;
+    pointer-events: none;
+    z-index: 2;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255, 100, 40, 0.08) 0%,
+        rgba(255, 77, 0, 0.95) 42%,
+        rgba(255, 150, 70, 0.95) 58%,
+        rgba(255, 100, 40, 0.08) 100%
+      )
+      0 0 / 100% 1.5px no-repeat,
+      linear-gradient(
+        90deg,
+        rgba(255, 100, 40, 0.06) 0%,
+        rgba(255, 77, 0, 0.85) 42%,
+        rgba(255, 160, 90, 0.85) 58%,
+        rgba(255, 100, 40, 0.06) 100%
+      )
+      0 5px / 100% 1.5px no-repeat,
+      linear-gradient(
+        90deg,
+        rgba(255, 100, 40, 0.12) 0%,
+        rgba(255, 77, 0, 1) 42%,
+        rgba(255, 140, 60, 1) 58%,
+        rgba(255, 100, 40, 0.12) 100%
+      )
+      0 10px / 100% 2px no-repeat,
+      linear-gradient(
+        90deg,
+        rgba(255, 100, 40, 0.06) 0%,
+        rgba(255, 77, 0, 0.85) 42%,
+        rgba(255, 160, 90, 0.85) 58%,
+        rgba(255, 100, 40, 0.06) 100%
+      )
+      0 16px / 100% 1.5px no-repeat,
+      linear-gradient(
+        90deg,
+        rgba(255, 100, 40, 0.08) 0%,
+        rgba(255, 77, 0, 0.95) 42%,
+        rgba(255, 150, 70, 0.95) 58%,
+        rgba(255, 100, 40, 0.08) 100%
+      )
+      0 21px / 100% 1.5px no-repeat;
+    filter: drop-shadow(0 0 6px rgba(255, 77, 0, 0.55)) drop-shadow(0 0 14px rgba(255, 100, 40, 0.35));
+  }
+}
+
+.projectCardLabel {
+  margin: 0 0 0.7rem;
   font-family: 'Archivo Black', sans-serif;
   font-weight: 900;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-primary);
 }
 
+.projectCardFrame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: linear-gradient(165deg, rgba(22, 22, 28, 0.95) 0%, rgba(8, 8, 12, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.55rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.projectCardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
+.projectCardImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  min-height: 6rem;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(120, 140, 200, 0.05) 100%
+  );
+}
+
 .projectCardDesc {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
+  margin: 1rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  text-align: center;
+  color: rgba(200, 205, 215, 0.88);
 }
 
 /* ——— 3. Team layout: title, subtitle, team grid ——— */

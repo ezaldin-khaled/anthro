@@ -4,9 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
 import styles from './OurWork.module.css'
 
-import ganImg from '../../Assets/gan.png'
-import chocolocoImg from '../../Assets/chocoloco.png'
-import clickExpriceImg from '../../Assets/click-exprice.png'
+import anthro1 from '../../Assets/ANTHRO (1).png'
+import anthro2 from '../../Assets/ANTHRO (2).png'
+import anthro3 from '../../Assets/ANTHRO (3).png'
+import anthro4 from '../../Assets/ANTHRO (4).png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -20,21 +21,28 @@ const workContent = {
       category: 'Platform',
       title: 'Gan',
       description: 'Where your talent meets real opportunities. Professional portfolio, visibility, and talent matching.',
-      image: ganImg,
+      image: anthro1,
     },
     {
       client: 'Premium Chocolates',
       category: 'E‑commerce',
       title: 'Chocoloco',
       description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.',
-      image: chocolocoImg,
+      image: anthro2,
     },
     {
       client: 'Logistics',
       category: 'Web & Development',
       title: 'Click Exprice',
       description: "Let's move your business forward. Services, fleet, and shipping solutions.",
-      image: clickExpriceImg,
+      image: anthro3,
+    },
+    {
+      client: 'Anthro',
+      category: 'Strategy',
+      title: 'Partnership Hub',
+      description: 'Data-driven collaboration and long-term relationships—aligned goals, shared dashboards, and measurable outcomes.',
+      image: anthro4,
     },
   ],
 }
@@ -216,9 +224,9 @@ export function OurWork() {
             <li key={i} className={styles.card}>
               <div className={styles.cardImageWrap}>
                 {item.image ? (
-                  <img src={item.image} alt="" className={styles.cardImage} aria-hidden />
+                  <img src={item.image} alt="" className={styles.cardImageImg} aria-hidden />
                 ) : (
-                  <div className={styles.cardImage} aria-hidden />
+                  <div className={styles.cardImagePlaceholder} aria-hidden />
                 )}
               </div>
               <div className={styles.cardBody}>
