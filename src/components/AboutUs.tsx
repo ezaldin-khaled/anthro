@@ -6,9 +6,9 @@ import { useLenis } from 'lenis/react'
 import styles from './AboutUs.module.css'
 import { teamMembers, teamImages, teamSubtitle } from '../data/team'
 import wesamImg from '../../Assets/wesam.png'
-import ganImg from '../../Assets/gan.png'
-import chocolocoImg from '../../Assets/chocoloco.png'
-import clickExpriceImg from '../../Assets/click-exprice.png'
+import ganImg from '../../Assets/GAN.png'
+import chocoImg from '../../Assets/CHOCO.png'
+import clickImg from '../../Assets/CLICK.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -24,8 +24,8 @@ const projectsContent = {
   subtitle: 'A selection of our recent work across branding, digital products, and campaigns.',
   items: [
     { title: 'Gan', description: 'Where your talent meets real opportunities. Professional portfolio, visibility, and talent matching.', image: ganImg },
-    { title: 'Chocoloco', description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.', image: chocolocoImg },
-    { title: 'Click Exprice', description: "Let's move your business forward. Services, fleet, and shipping solutions.", image: clickExpriceImg },
+    { title: 'Chocoloco', description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.', image: chocoImg },
+    { title: 'Click Exprice', description: "Let's move your business forward. Services, fleet, and shipping solutions.", image: clickImg },
   ],
 }
 
