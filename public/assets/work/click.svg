@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Click Exprice">
+  <defs><linearGradient id="k" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e2d4a"/><stop offset="100%" stop-color="#0f1628"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#k)"/>
+  <text x="400" y="300" text-anchor="middle" fill="#b8d4ff" font-family="system-ui,sans-serif" font-size="26" font-weight="600">Click Exprice</text>
+</svg>

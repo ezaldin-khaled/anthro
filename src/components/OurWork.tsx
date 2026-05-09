@@ -4,13 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
 import styles from './OurWork.module.css'
 
-import anthro1 from '../../Assets/ANTHRO (1).png'
-import anthro2 from '../../Assets/ANTHRO (2).png'
-import anthro3 from '../../Assets/ANTHRO (3).png'
-import anthro4 from '../../Assets/ANTHRO (4).png'
-
 gsap.registerPlugin(ScrollTrigger)
 
+/** Served from /public — avoids broken imports for PNGs not in git / Docker build */
 const workContent = {
   tag: 'Latest work',
   title: 'Our Work',
@@ -21,28 +17,28 @@ const workContent = {
       category: 'Platform',
       title: 'Gan',
       description: 'Where your talent meets real opportunities. Professional portfolio, visibility, and talent matching.',
-      image: anthro1,
+      image: '/assets/work/gan.svg',
     },
     {
       client: 'Premium Chocolates',
       category: 'E‑commerce',
       title: 'Chocoloco',
       description: 'Sweets crafted for wholesale partners worldwide. Browse by category and explore products.',
-      image: anthro2,
+      image: '/assets/work/chocoloco.svg',
     },
     {
       client: 'Logistics',
       category: 'Web & Development',
       title: 'Click Exprice',
       description: "Let's move your business forward. Services, fleet, and shipping solutions.",
-      image: anthro3,
+      image: '/assets/work/click.svg',
     },
     {
       client: 'Anthro',
       category: 'Strategy',
       title: 'Partnership Hub',
       description: 'Data-driven collaboration and long-term relationships—aligned goals, shared dashboards, and measurable outcomes.',
-      image: anthro4,
+      image: '/assets/work/partnership.svg',
     },
   ],
 }
