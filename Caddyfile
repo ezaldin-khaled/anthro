@@ -1,6 +1,8 @@
-# When behind a main proxy (shared droplet): main proxy does SSL; Caddy serves HTTP only.
-# http:// prefix = no TLS, so the main proxy can forward http://127.0.0.1:9080.
-http://anthrotech.ae, http://www.anthrotech.ae {
+# When behind a main proxy (shared droplet): host nginx terminates TLS and forwards to this container (e.g. :9080→:80).
+# Listen on :80 without filtering by hostname so every proxied request reaches Nginx (SPA fallback).
+# Strict host-only matching caused HTTP 404 when Host did not match anthrotech.ae exactly.
+
+:80 {
   reverse_proxy frontend:80 {
     header_up Host {host}
     header_up X-Forwarded-Proto https
