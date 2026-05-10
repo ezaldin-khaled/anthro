@@ -1,0 +1,15 @@
+# Use when host nginx is wrong/unwanted and this VPS should terminate TLS in Docker only.
+# Merge with prod: replaces Caddy ports + Caddyfile for public HTTPS.
+#
+#   docker compose -f docker-compose.prod.yml -f docker-compose.public.yml up -d --build
+#
+# Requires ports 80 and 443 free on the host (stop/disabled conflicting nginx/apache first).
+
+services:
+  caddy:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.public:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data

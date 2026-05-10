@@ -1,0 +1,7 @@
+# Docker-edge TLS: Caddy listens on public 80/443 (stop/disable host nginx on those ports first).
+# ACME uses HTTP-01 on :80 — port must not be bound by another service.
+
+anthrotech.ae, www.anthrotech.ae {
+  encode gzip zstd
+  reverse_proxy frontend:80
+}

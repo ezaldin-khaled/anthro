@@ -27,5 +27,7 @@ echo "=== Optional: public HTTPS (may fail from restricted networks) ==="
 curl -sI --connect-timeout 5 --max-time 15 "https://anthrotech.ae/" | sed -n '1,15p' || true
 
 echo
-echo "If direct upstream is OK but the public URL is 404, fix /etc/nginx sites for anthrotech.ae"
-echo "(proxy_pass http://127.0.0.1:${UPSTREAM_PORT}; — no trailing slash on the port URL)."
+echo "If direct upstream is OK but public HTTPS is 404, either:"
+echo "  A) Fix host nginx: proxy_pass http://127.0.0.1:${UPSTREAM_PORT}; (no trailing slash on the URL)"
+echo "  B) Docker-only TLS: free :80 and :443, then: ./scripts/start-public-docker.sh"
+echo "     (Caddy gets certs; stop/disable conflicting nginx on those ports first.)"
