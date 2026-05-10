@@ -1,13 +1,16 @@
-# Production on Droplet: Caddy handles SSL (HTTPS) and proxies to the frontend.
-# Dedicated droplet (only anthro):  docker compose -f docker-compose.prod.yml up -d
-# Shared droplet (80/443 in use):  ./start-shared.sh  (uses 9080/9443; override with ANTHRO_HTTP_PORT/ANTHRO_HTTPS_PORT)
+# Caddy = reverse proxy in front of the nginx frontend container (SPA + /api proxy to backend).
+# On a SHARED host, only ONE stack can bind host :80 / :443 — so defaults map HIGH ports instead.
+#
+# Shared VPS (default below): Caddy on host 9080/9443 → point Traefik/nginx at http://127.0.0.1:9080
+# Dedicated VPS (Anthro only): ANTHRO_HTTP_PORT=80 ANTHRO_HTTPS_PORT=443 docker compose -f docker-compose.prod.yml up -d
+# Or copy .env.example to .env and adjust.
 
 services:
   caddy:
     image: caddy:2-alpine
     ports:
-      - "${ANTHRO_HTTP_PORT:-80}:80"
-      - "${ANTHRO_HTTPS_PORT:-443}:443"
+      - "${ANTHRO_HTTP_PORT:-9080}:80"
+      - "${ANTHRO_HTTPS_PORT:-9443}:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

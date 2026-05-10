@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Compose / deploy secrets at repo root
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
