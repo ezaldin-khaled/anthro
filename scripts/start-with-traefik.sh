@@ -1,20 +1,16 @@
 #!/usr/bin/env bash
-# Attach Anthro Caddy to your Traefik edge network (fixes public 404 while http://127.0.0.1:9080 works).
+# Same as ./scripts/deploy-up.sh — Traefik merge is automatic when network "edge" exists.
+# Kept for backwards compatibility; fails fast if edge is missing (optional guard).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-TRAEFIK_OVERRIDE="${TRAEFIK_COMPOSE_FILE:-docker-compose.traefik.yml}"
-COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
-
 NET="${TRAEFIK_NETWORK:-edge}"
 if ! docker network inspect "$NET" >/dev/null 2>&1; then
-  printf 'ERROR: Docker network "%s" does not exist.\n' "$NET" >&2
-  printf 'List networks: docker network ls\n' >&2
-  printf 'Traefik stacks usually expose a shared network (often named "edge").\n' >&2
+  printf 'ERROR: Docker network "%s" does not exist — Traefik overlay cannot attach.\n' "$NET" >&2
   exit 1
 fi
 
-docker compose -f "$COMPOSE_FILE" -f "$TRAEFIK_OVERRIDE" up -d --build
+export ANTHRO_HTTP_PORT="${ANTHRO_HTTP_PORT:-9080}"
+export ANTHRO_HTTPS_PORT="${ANTHRO_HTTPS_PORT:-9443}"
 
-printf '\nTraefik should pick up labels within ~10–30s. Test:\n'
-printf '  curl -sIk https://anthrotech.ae/ | grep -i X-Anthro\n'
+exec ./scripts/deploy-up.sh -d --build "$@"

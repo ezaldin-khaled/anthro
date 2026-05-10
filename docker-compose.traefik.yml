@@ -16,6 +16,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=${TRAEFIK_DOCKER_NETWORK:-edge}
+      - traefik.http.routers.anthro.priority=100
       - traefik.http.routers.anthro.rule=Host(`anthrotech.ae`) || Host(`www.anthrotech.ae`)
       - traefik.http.routers.anthro.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}
       - traefik.http.routers.anthro.tls=true

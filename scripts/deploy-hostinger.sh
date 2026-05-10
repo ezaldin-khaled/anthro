@@ -44,11 +44,14 @@ if [ ! -x "./start-shared.sh" ]; then
   fail "start-shared.sh is missing or not executable"
 fi
 
-log "Building and starting containers"
+log "Building and starting containers (auto Traefik merge if edge network exists)"
 ./start-shared.sh --build
 
 log "Container status"
-docker compose -f "$COMPOSE_FILE" ps
+# shellcheck disable=SC1091
+source ./scripts/_anthro-compose.sh
+anthro_compose_args
+docker compose "${ANTHRO_COMPOSE_ARGS[@]}" ps
 
 UPSTREAM_PORT="${ANTHRO_HTTP_PORT:-9080}"
 log "Smoke test upstream (expect HTTP 200 + X-Anthro-Served): http://127.0.0.1:${UPSTREAM_PORT}/"
@@ -61,7 +64,7 @@ for _ in $(seq 1 45); do
   sleep 2
 done
 if [ "$http_code" != "200" ]; then
-  fail "Upstream returned HTTP ${http_code:-000} (expected 200). Is host nginx proxy_pass set to 127.0.0.1:${UPSTREAM_PORT}? Try: docker compose -f \"$COMPOSE_FILE\" logs --tail=80"
+  fail "Upstream returned HTTP ${http_code:-000} (expected 200). Use scripts/deploy-up.sh so Traefik overlay applies; check: docker compose logs --tail=80 caddy frontend"
 fi
 if ! curl -sI --max-time 8 "http://127.0.0.1:${UPSTREAM_PORT}/" | grep -qi '^X-Anthro-Served:'; then
   fail "Missing X-Anthro-Served header from frontend — traffic may not be reaching the Anthro nginx container."
