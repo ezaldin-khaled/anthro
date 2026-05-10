@@ -49,3 +49,5 @@ echo "If direct upstream is OK but public HTTPS is 404, either:"
 echo "  A) Fix host nginx: proxy_pass http://127.0.0.1:${UPSTREAM_PORT}; (no trailing slash on the URL)"
 echo "  B) Docker-only TLS: free :80 and :443, then: ./scripts/start-public-docker.sh"
 echo "     (Caddy gets certs; stop/disable conflicting nginx on those ports first.)"
+echo
+echo "Full layered report (run on server): ./scripts/deep-diagnose-anthro.sh"
