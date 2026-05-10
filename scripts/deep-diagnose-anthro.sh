@@ -22,7 +22,18 @@ hr() {
 
 safe_curl_code() {
   local url="$1"
-  curl -s -o /dev/null -w "%{http_code}" --connect-timeout 4 --max-time 12 "$url" 2>/dev/null || printf '000'
+  local out
+  out="$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 4 --max-time 12 "$url" 2>/dev/null)" || true
+  out="$(printf '%s' "$out" | tr -cd '0-9')"
+  if [ -z "$out" ]; then
+    printf '000'
+    return
+  fi
+  # curl quirks / duplicates → keep first three digits
+  if [ "${#out}" -gt 3 ]; then
+    out="${out:0:3}"
+  fi
+  printf '%s' "$out"
 }
 
 safe_curl_head() {
@@ -62,11 +73,30 @@ else
   printf 'ss not installed\n'
 fi
 
-hr "3) Docker: compose ps"
+hr "3) Docker: compose ps (running)"
 if docker compose version >/dev/null 2>&1; then
   docker compose -f "$COMPOSE_FILE" ps 2>&1 || true
 else
   printf 'docker compose not available\n'
+fi
+
+hr "3b) Docker: compose ps -a (exited services)"
+if docker compose version >/dev/null 2>&1; then
+  docker compose -f "$COMPOSE_FILE" ps -a 2>&1 || true
+fi
+
+hr "3c) Who publishes host ports 80 / 443 (any stack)"
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Ports}}' 2>/dev/null | grep -E '(:80->|:443->| [::]:80->|[0-9]+\.80->|[0-9]+\.443->)' || docker ps --format 'table {{.Names}}\t{{.Ports}}' 2>/dev/null | head -25
+
+CADDY_CID=""
+if docker compose version >/dev/null 2>&1; then
+  CADDY_CID="$(docker compose -f "$COMPOSE_FILE" ps -q caddy 2>/dev/null || true)"
+fi
+if [ -z "${CADDY_CID:-}" ]; then
+  printf '\n*** CRITICAL: service "caddy" is not running in this project.\n'
+  printf '    The site needs Caddy in front of nginx. Restore it:\n'
+  printf '      %s/scripts/repair-anthro-stack.sh\n' "$APP_DIR"
+  printf '    If another container already uses 9080/80/443, stop it or pick another host port.\n\n'
 fi
 
 hr "4) Detect Caddy → host port (container internal :80)"
@@ -78,10 +108,17 @@ if [ -n "$map_line" ]; then
 fi
 if [ -z "$HOST_PORT" ]; then
   HOST_PORT="${ANTHRO_HTTP_PORT:-9080}"
-  printf 'fallback ANTHRO_HTTP_PORT → TCP %s\n' "$HOST_PORT"
+  printf 'no caddy port mapping — fallback guess TCP %s (often wrong if Caddy is down)\n' "$HOST_PORT"
 fi
 
 UPSTREAM_ROOT="http://127.0.0.1:${HOST_PORT}"
+
+hr "4b) Sanity: raw :80 on this host (whoever owns docker-proxy :80 — may NOT be Anthro)"
+printf 'curl -I http://127.0.0.1:80/ with Host: anthrotech.ae\n'
+curl -sI --connect-timeout 4 --max-time 12 -H "Host: anthrotech.ae" "http://127.0.0.1:80/" 2>/dev/null | sed -n '1,12p' || printf '(connection failed)\n'
+printf 'First bytes:\n'
+curl -sS --connect-timeout 3 --max-time 8 -H "Host: anthrotech.ae" "http://127.0.0.1:80/" 2>/dev/null | head -c 100 | tr '\n' ' '
+printf '\n(if this says \"404 page not found\" it is Gin — not the React nginx bundle)\n'
 
 hr "5) Layer A — curl inside server to Anthro (must be OK before blaming nginx)"
 printf 'GET %s/\n' "$UPSTREAM_ROOT"
@@ -166,7 +203,9 @@ fi
 
 hr "10) Quick interpretation"
 printf '%s\n' "- Gin plain-text '404 page not found' → request reached Go backend on wrong path/port."
-printf '%s\n' "- /assets/… 404 with upstream 200 on / → old index.html in browser or incomplete deploy."
-printf '%s\n' "- Upstream 200, public 404 → fix host nginx or use scripts/start-public-docker.sh on free :80/:443."
+printf '%s\n' "- docker compose ps without caddy + HTTP 000 to :9080 → Caddy never started or crashed; run repair-anthro-stack.sh."
+printf '%s\n' "- Something else on :80/:443 (see 3c) while Anthro has no Caddy → public site is the WRONG container until you fix ports."
+printf '%s\n' "- /assets/… 404 with upstream 200 on / → stale index.html or incomplete frontend deploy."
+printf '%s\n' "- Upstream 200, public 404 → edge proxy / Cloudflare wrong upstream."
 
 printf '\nDone.\n'
