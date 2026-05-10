@@ -20,6 +20,7 @@ require_cmd() {
 
 require_cmd git
 require_cmd docker
+require_cmd curl
 
 if [ ! -d "$APP_DIR/.git" ]; then
   fail "Repo not found at $APP_DIR"
@@ -48,5 +49,22 @@ log "Building and starting containers"
 
 log "Container status"
 docker compose -f "$COMPOSE_FILE" ps
+
+UPSTREAM_PORT="${ANTHRO_HTTP_PORT:-9080}"
+log "Smoke test upstream (expect HTTP 200 + X-Anthro-Served): http://127.0.0.1:${UPSTREAM_PORT}/"
+http_code=""
+for _ in $(seq 1 45); do
+  http_code="$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 2 --max-time 8 "http://127.0.0.1:${UPSTREAM_PORT}/" || true)"
+  if [ "$http_code" = "200" ]; then
+    break
+  fi
+  sleep 2
+done
+if [ "$http_code" != "200" ]; then
+  fail "Upstream returned HTTP ${http_code:-000} (expected 200). Is host nginx proxy_pass set to 127.0.0.1:${UPSTREAM_PORT}? Try: docker compose -f \"$COMPOSE_FILE\" logs --tail=80"
+fi
+if ! curl -sI --max-time 8 "http://127.0.0.1:${UPSTREAM_PORT}/" | grep -qi '^X-Anthro-Served:'; then
+  fail "Missing X-Anthro-Served header from frontend — traffic may not be reaching the Anthro nginx container."
+fi
 
 log "Deploy completed successfully"
